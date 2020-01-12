@@ -1,4 +1,4 @@
-![bamazon Logo](logo.png)
+## ![bamazon Logo](logo.png)
 
 # :small_orange_diamond:bamazon
 ## Description
