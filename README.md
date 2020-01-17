@@ -12,6 +12,7 @@ This application is a command-prompt storefront, similar to a popular online ret
 
 ## Video of Bamazon working
 ![](https://j.gifs.com/VAroYv.gif)
+- - -
 [Click Here to Watch Video on YouTube](https://youtu.be/qILX-JfYB58)
 
 ## Setup
@@ -41,19 +42,19 @@ This application is a command-prompt storefront, similar to a popular online ret
 
  - - - 
 
- ##**Output Examples**
+ ## Output Examples
 
  ### Successful Connection with current inventory displayed
- ![Results](/images/connection.png)
+ ![connection](/images/connection.png)
 
  ### Successful purchase
-![Results](/images/successfulPurchase) 
+![succesfulPurchase](/images/successfulPurchase,png) 
 
 ### Invalid Selection
-![Results](/images/invalid.png)
+![invalid](/images/invalid.png)
 
 ### Reduction in inventory
-![Results](/images/inventoryReduction.png)
+![inventoryReduced](/images/inventoryReduced.png)
 
 ### Exiting the program
 ![Results](/images/exit.png)
