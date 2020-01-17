@@ -77,7 +77,7 @@ var inventory = function() {
               " - " +
               res[item].productname +
               " for the total amount of $" +
-              parseFloat(res[item].price.toFixed(2) * qty)
+              parseFloat(res[item].price.toFixed() * qty)
           );
           connection.query( 
             'UPDATE products SET ? WHERE ?',
@@ -106,7 +106,7 @@ var inventory = function() {
             message: "Would you like to purchase another item?"
           }]).then(function(answer){
             if(answer.reply){
-              inventory();
+              inventory(answer.Y);
             } else{
               console.log("See you soon!");
               connection.end();
