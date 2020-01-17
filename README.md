@@ -3,7 +3,7 @@
 **Created By**: `Shannen Grimes`
 -
 ***Visit me on Gituhub to see my other projects***
-![]https://shannengrimes.github.io/Portfolio/
+![GitHub](https://shannengrimes.github.io/Portfolio/)
 - - - 
 
 ## Introduction
