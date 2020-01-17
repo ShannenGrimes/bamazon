@@ -1,71 +1,120 @@
-var mysql = require('mysql');
-var inquirer = require('inquirer');
+var mysql = require("mysql");
+var inquirer = require("inquirer");
+var Table = require("cli-table");
 
 var connection = mysql.createConnection({
-    host:"localhost",
-    port: 3306,
-    user:"root",
-    password:"Trumpsucks#3",
-    database:"bamazon_db"
-})
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "Trumpsucks#3",
+  database: "bamazon_db"
+});
 
-connection.connect(function(err){
-    if (err) throw err;
-    console.log("Connection successful!");
-    makeTable();
-})
+connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Welcome to Bamazon");
+});
+// This will be used to display the available inventory for sale
+var inventory = function() {
+  connection.query('SELECT * FROM products', function(err, res) {
+    // This will be my first cli-table.  This is being used to format the list of inventory in the command line.
+    var table = new Table({
+      head: ["Item ID", "Product Name", "Department", "Price", "Stock Quantity"]
+    });
 
-var makeTable = function(){
-    connection.query("SELECT * FROM products", function(err,res){
-        for(var i=0; i<res.length; i++){
-            console.log(res[i].itemid+" || "+res[i].productname+" || "+res[i].departmentname+" || "+res[i].price+" || "+res[i].stockquantity+"\n");
-        }
-    promptCustomer(res);
-    })
-}
-
-var promptCustomer = function(res){
-    inquirer.prompt([{
-        type: 'input',
-        name: 'choice',
-        message:"What would you like to purchase? [Quit with Q]"
-    }]).then(function(answer){
-        var correct = false;
-        if(answer.choice.toUpperCase()=="Q"){
-            process.exit();
-        }
-        for(var i=0;i<res.length;i++){
-            if(res[i].productname==answer.choice){
-                correct=true;
-                var product=answer.choice;
-                var id=i;
-                inquirer.prompt({
-                    type:"input",
-                    name:"quant",
-                    message:"How many would you like to buy?",
-                    validate: function(value){
-                        if(isNaN(value)==false){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                }).then(function(answer){
-                    if((res[id].stockquantity-answer.quant)>0){
-                        connection.query("UPDATE products SET stockquantity='"+(res[id].stockquantity-answer.quant)+"' WHERE productname'"+product+"'",function(err,res2){
-                            console.log("Product Bought!");
-                            makeTable();
-                        })
-                    } else {
-                        console.log("Not a valid selection!");
-                        promptCustomer(res);
-                    }
-                })
+    console.log("===========================");
+    console.log("Bamazon Inventory for Sale");
+    
+    for (var i = 0; i < res.length; i++) {
+      table.push([
+        res[i].itemid,
+        res[i].productname,
+        res[i].departmentname,
+        res[i].price.toFixed(2),
+        res[i].stockquantity + "\n"
+      ]);
+    }
+    console.log("===========================");
+    // This is the customer prompt that will be using the cli format.
+    console.log(table.toString());
+    inquirer
+      .prompt([
+        {
+          name: "id",
+          type: "input",
+          message: "What would you like to purchase? Enter the Item ID.",
+          validate: function(value) {
+            if (isNaN(value) == false) {
+              return true;
+            } else {
+              return false;
             }
+          }
+        },
+        {
+          name: "Quantity",
+          type: "input",
+          message: "Input the number of items you wish to purchase.",
+          validate: function(value) {
+            if (isNaN(value) == false) {
+              return true;
+            } else {
+              return false;
+            }
+          }
         }
-        if(i==res.length && correct==false){
-            console.log("Not a valis selection!");
-            promptCustomer(res);
+      ])
+      .then(function(answer) {
+        var item = answer.id - 1;
+        var products = res[item];
+        var qty = parseInt(answer.Quantity);
+        if (qty < res[item].stockquantity) {
+          console.log(
+            "You have purchased " +
+              "(" +
+              answer.Quantity +
+              ")" +
+              " - " +
+              res[item].productname +
+              " for the total amount of $" +
+              parseFloat(res[item].price.toFixed(2) * qty)
+          );
+          connection.query( 
+            'UPDATE products SET ? WHERE ?',
+            [
+              {
+                stockquantity: res[item].stockquantity - qty
+              },
+              {
+                itemid: res[item].itemid
+              }
+            ],
+            function(err, res) {
+              console.log(err);
+            }
+          );
+        } else {
+          console.log(
+            "Sorry, that is an invalid selection.  Please check your order and try again."
+          );
         }
-    })    
-}
+        prompt();
+        function prompt(){
+          inquirer.prompt([{
+            type: "confirm",
+            name: "reply",
+            message: "Would you like to purchase another item?"
+          }]).then(function(answer){
+            if(answer.reply){
+              inventory();
+            } else{
+              console.log("See you soon!");
+              connection.end();
+            }
+          });
+        }
+      });
+  });
+};
+
+inventory();
