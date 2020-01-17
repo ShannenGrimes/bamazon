@@ -1,8 +1,9 @@
 ![bamazon Logo](/images/logo.png)
 
 **Created By**: `Shannen Grimes`
+-
 ***Visit me on Gituhub to see my other projects***
-![GitHub]https://shannengrimes.github.io/Portfolio/
+![]https://shannengrimes.github.io/Portfolio/
 - - - 
 
 ## Introduction
