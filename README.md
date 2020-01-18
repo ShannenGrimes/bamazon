@@ -46,7 +46,7 @@ This application is a command-prompt storefront, similar to a popular online ret
  ![connection](/images/connection.png)
 
  ### Successful Purchase
-![successfulPurchase](images\successfulPurchase.png) 
+![successfulPurchase](/images/successfulPurchase.png) 
 
 ### Invalid Selection
 ![invalid](/images/invalid.png)
